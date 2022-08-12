@@ -1,0 +1,33 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.itemName {
+  width: 60%;
+  font-weight: 500;
+}
+
+.itemNumber {
+  margin-right: auto;
+}
+
+.delete_btn {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  font-size: 12px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  &:hover {
+    background: #e2e2e2;
+  }
+}
