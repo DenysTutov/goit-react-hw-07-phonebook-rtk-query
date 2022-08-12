@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { showError, showSuccess } from '../utils/notification';
 import {
@@ -8,8 +8,7 @@ import {
 
 export const useAddContact = () => {
   const { data: contacts } = useGetContactsQuery();
-  const [addContact, { isError, isLoading, isSuccess }] =
-    useAddContactMutation();
+  const [addContact, { isLoading }] = useAddContactMutation();
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -31,7 +30,7 @@ export const useAddContact = () => {
     }
   };
 
-  const handleAddContact = event => {
+  const handleAddContact = async event => {
     event.preventDefault();
 
     const contactsName = contacts.map(contact => contact.name);
@@ -50,21 +49,21 @@ export const useAddContact = () => {
       number,
     };
 
-    addContact(newContact);
+    try {
+      const response = await addContact(newContact);
+
+      if (response.data?.name) {
+        showSuccess(`Contact ${response.data?.name} added`);
+        reset();
+      }
+
+      if (response.error?.status === 404) {
+        showError(`Ups!...`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      showSuccess('Contact added');
-      reset();
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (isError) {
-      showError(`Ups! Something was wrong`);
-    }
-  }, [isError]);
 
   const reset = () => {
     setName('');
